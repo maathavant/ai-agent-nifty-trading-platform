@@ -71,7 +71,9 @@ const AgentCard = ({ name, icon, result, description }) => {
             {Object.entries(result.key_indicators).map(([key, value]) => (
               <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ textTransform: 'uppercase' }}>{key}:</span>
-                <span className="font-bold">{value}</span>
+                <span className="font-bold">
+                  {typeof value === 'object' ? JSON.stringify(value) : value}
+                </span>
               </div>
             ))}
           </div>
@@ -87,7 +89,9 @@ const AgentCard = ({ name, icon, result, description }) => {
             {Object.entries(result.market_mood).map(([key, value]) => (
               <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ textTransform: 'capitalize' }}>{key}:</span>
-                <span className="font-bold">{value}</span>
+                <span className="font-bold">
+                  {typeof value === 'object' ? JSON.stringify(value) : value}
+                </span>
               </div>
             ))}
           </div>
@@ -103,7 +107,9 @@ const AgentCard = ({ name, icon, result, description }) => {
             {Object.entries(result.key_factors).map(([key, value]) => (
               <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ textTransform: 'capitalize' }}>{key}:</span>
-                <span className="font-bold">{value}</span>
+                <span className="font-bold">
+                  {typeof value === 'object' ? JSON.stringify(value) : value}
+                </span>
               </div>
             ))}
           </div>
@@ -118,15 +124,45 @@ const AgentCard = ({ name, icon, result, description }) => {
           <div className="grid grid-2" style={{ gap: '8px', fontSize: '0.8rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Overall:</span>
-              <span className={`font-bold ${result.risk_level.overall === 'HIGH' ? 'text-danger' : 
-                result.risk_level.overall === 'MEDIUM' ? 'text-warning' : 'text-success'}`}>
-                {result.risk_level.overall}
+              <span className={`font-bold ${
+                (typeof result.risk_level === 'object' ? result.risk_level.overall || result.risk_level.level : result.risk_level) === 'HIGH' ? 'text-danger' : 
+                (typeof result.risk_level === 'object' ? result.risk_level.overall || result.risk_level.level : result.risk_level) === 'MEDIUM' ? 'text-warning' : 'text-success'
+              }`}>
+                {typeof result.risk_level === 'object' ? 
+                  (result.risk_level.overall || result.risk_level.level || 'N/A') : 
+                  result.risk_level}
               </span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Score:</span>
-              <span className="font-bold">{result.risk_level.score}/100</span>
-            </div>
+            {typeof result.risk_level === 'object' && result.risk_level.score && (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Score:</span>
+                <span className="font-bold">{result.risk_level.score}/100</span>
+              </div>
+            )}
+            {typeof result.risk_level === 'object' && result.risk_level.factors && (
+              <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
+                <div className="text-muted mb-1" style={{ fontSize: '0.75rem' }}>Factors:</div>
+                <div style={{ fontSize: '0.75rem' }}>
+                  {Array.isArray(result.risk_level.factors) ? 
+                    result.risk_level.factors.slice(0, 2).join(', ') :
+                    typeof result.risk_level.factors === 'string' ? result.risk_level.factors :
+                    'Various factors considered'
+                  }
+                </div>
+              </div>
+            )}
+            {typeof result.risk_level === 'object' && result.risk_level.positiveFactors && (
+              <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
+                <div className="text-muted mb-1" style={{ fontSize: '0.75rem' }}>Positive Factors:</div>
+                <div style={{ fontSize: '0.75rem' }}>
+                  {Array.isArray(result.risk_level.positiveFactors) ? 
+                    result.risk_level.positiveFactors.slice(0, 2).join(', ') :
+                    typeof result.risk_level.positiveFactors === 'string' ? result.risk_level.positiveFactors :
+                    'Positive indicators present'
+                  }
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
