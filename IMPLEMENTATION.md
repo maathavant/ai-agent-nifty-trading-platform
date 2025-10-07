@@ -107,6 +107,21 @@ The system uses several services to provide data and analysis to the agents.
     4.  **Logging Validation**: Includes a placeholder check for logging related to OpenAI interactions.
     5.  **Report Generation**: At the end of the validation process, it generates a summary report with an overall integration score and provides recommendations for fixing any issues found.
 
+## AI Integration Strategy
+
+The Nifty Trading System heavily relies on Artificial Intelligence to enhance its analytical capabilities and to provide more nuanced and accurate trading signals. The primary AI provider used in this system is OpenAI.
+
+### OpenAI Integration
+
+All four of the system's specialized agents (`TechnicalAnalysisAgent`, `MarketSentimentAgent`, `ResearchAgent`, and `RiskManagementAgent`) are integrated with OpenAI's language models. This integration allows the agents to go beyond simple quantitative analysis and to incorporate qualitative insights into their decision-making processes. For example, the `ResearchAgent` uses OpenAI to perform sentiment analysis on news articles, while the `TechnicalAnalysisAgent` uses it to interpret complex chart patterns.
+
+Each agent has a `performAIAnalysis` method that sends a carefully crafted prompt to the OpenAI API. The prompt includes the data that the agent has gathered and analyzed, and the API returns a qualitative assessment that is then used to refine the agent's trading signal.
+
+### `OPENAI_API_KEY`
+
+The integration with OpenAI is dependent on a valid API key. The system retrieves the API key from the environment variable `OPENAI_API_KEY`. It is crucial that this environment variable is set correctly for the system to function as intended. Without a valid API key, the agents will not be able to connect to the OpenAI service, and the system's AI-powered features will be disabled. The `validateOpenAI.js` script can be used to verify that the API key is correctly configured.
+
+
 
 
 
