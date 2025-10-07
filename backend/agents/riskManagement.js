@@ -383,7 +383,7 @@ Focus on actionable risk management for short-term Nifty 50 trading.`;
       const response = await this.openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 350,
+        max_tokens: 200,
         temperature: 0.2
       });
 
