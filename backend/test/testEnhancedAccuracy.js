@@ -353,4 +353,21 @@ if (require.main === module) {
   tester.runComprehensiveTest().catch(console.error);
 }
 
+describe('AccuracyTestSuite', () => {
+  describe('recordTest', () => {
+    it('should add a test result to the testResults array', () => {
+      const suite = new AccuracyTestSuite();
+      const testName = 'Sample Test';
+      const passed = true;
+      const details = 'This is a sample test.';
+      suite.recordTest(testName, passed, details);
+      expect(suite.testResults).toHaveLength(1);
+      const result = suite.testResults[0];
+      expect(result.test).toBe(testName);
+      expect(result.passed).toBe(passed);
+      expect(result.details).toBe(details);
+      expect(result.timestamp).toBeInstanceOf(Date);
+    });
+  });
+});
 module.exports = AccuracyTestSuite;
