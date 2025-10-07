@@ -60,4 +60,40 @@ The system employs four specialized AI agents, each responsible for a different 
 *   **Data Dependencies**: It relies on the `marketData` service to fetch the necessary data for its risk calculations.
 *   **Signal Generation**: Instead of a BUY/SELL signal, this agent generates a risk signal (e.g., 'APPROVE_TRADE', 'CAUTIOUS_TRADE', 'AVOID_TRADE') and a risk score that acts as a crucial modifier for the final trading decision made by the `agentOrchestrator`.
 
+## Services
+
+The system uses several services to provide data and analysis to the agents.
+
+### `backend/services/marketData.js`
+
+*   **Purpose**: This service is the primary data provider for the entire system. It is responsible for fetching real-time and historical market data for the Nifty 50 index and its constituent stocks.
+*   **Data Sources**: It primarily uses the Yahoo Finance API (via `axios`) for fetching data. It also includes mock data functions as a fallback mechanism if the external API fails.
+*   **Key Methods**:
+    *   `getNiftyIndexData()`: Fetches current data for the Nifty 50 index.
+    *   `getHistoricalData(symbol, period, interval)`: Fetches historical data for a given symbol, period, and interval.
+    *   `getNifty50Stocks()`: Returns a list of Nifty 50 stock symbols and their current data.
+    *   `getMarketSentiment()`: Calculates a basic market sentiment score based on advancers and decliners.
+
+### `backend/services/historicalAnalysis.js`
+
+*   **Purpose**: This service analyzes historical market patterns to improve the accuracy and confidence of trading signals.
+*   **Key Methods**:
+    *   `analyzeHistoricalPatterns(currentData)`: Finds similar past market conditions and calculates the success rate of past signals to generate confidence and risk adjustments.
+    *   `addDataPoint(prediction, actualOutcome)`: Adds new prediction and outcome data for continuous learning.
+
+### `backend/services/microstructureAnalysis.js`
+
+*   **Purpose**: This service provides deeper market insights by simulating the analysis of order flow, liquidity, and institutional activity.
+*   **Key Methods**:
+    *   `analyzeMicrostructure(niftyData, topStocks)`: Orchestrates various microstructure analyses, including bid-ask spread, order flow, and institutional activity.
+
+### `backend/services/performanceTracker.js`
+
+*   **Purpose**: This service tracks the accuracy of generated signals over time.
+*   **Key Methods**:
+    *   `trackPrediction(...)`: Records a new prediction.
+    *   `validatePrediction(predictionId)`: Validates a prediction against the actual market outcome after a 15-minute interval.
+    *   `getPerformanceStats()`: Provides detailed performance statistics.
+
+
 
