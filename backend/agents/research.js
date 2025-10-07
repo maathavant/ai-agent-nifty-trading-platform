@@ -334,7 +334,7 @@ Provide analysis in JSON format:
           },
           { role: "user", content: prompt }
         ],
-        max_tokens: 500,
+        max_tokens: 250,
         temperature: 0.2,
         response_format: { type: "json_object" }
       });
@@ -1435,7 +1435,7 @@ Provide comprehensive analysis in JSON:
           },
           { role: "user", content: prompt }
         ],
-        max_tokens: 800,
+        max_tokens: 400,
         temperature: 0.2,
         response_format: { type: "json_object" }
       });
