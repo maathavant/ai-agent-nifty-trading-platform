@@ -95,5 +95,18 @@ The system uses several services to provide data and analysis to the agents.
     *   `validatePrediction(predictionId)`: Validates a prediction against the actual market outcome after a 15-minute interval.
     *   `getPerformanceStats()`: Provides detailed performance statistics.
 
+## Utilities
+
+### `backend/validateOpenAI.js`
+
+*   **Purpose**: This is a utility script designed to test and validate the integration with the OpenAI API. It ensures that the API key is correctly configured and that the agents can successfully connect to and interact with the OpenAI service. This is crucial for the system's AI-powered features.
+*   **Key Validation Steps**:
+    1.  **Connection Test**: Verifies that the `OPENAI_API_KEY` is present in the environment variables and that a basic API call to the OpenAI service is successful.
+    2.  **Agent Implementation Check**: Checks that each of the four AI agents can be instantiated correctly and that each has an initialized OpenAI client.
+    3.  **Enhanced Analysis Test**: Simulates a call to each agent's `performAIAnalysis` method to ensure that the agent can receive and process a response from OpenAI.
+    4.  **Logging Validation**: Includes a placeholder check for logging related to OpenAI interactions.
+    5.  **Report Generation**: At the end of the validation process, it generates a summary report with an overall integration score and provides recommendations for fixing any issues found.
+
+
 
 
