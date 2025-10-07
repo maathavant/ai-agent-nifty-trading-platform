@@ -18,3 +18,46 @@ The system's architecture is designed to be modular and extensible. Each agent a
 
 The system periodically runs the `agentOrchestrator.runAnalysis()` which then triggers all the agents to perform their analysis in parallel. The aggregated results are used to generate a final trading signal, which is then broadcasted via WebSockets to the frontend.
 
+## AI Agents
+
+The system employs four specialized AI agents, each responsible for a different aspect of market analysis. All agents share a common structure:
+
+*   **Constructor**: Initializes the agent's name, an OpenAI client (using `process.env.OPENAI_API_KEY`), and any other necessary services.
+*   **`analyze()` method**: The main method that performs the agent's analysis. It fetches data, performs calculations, and uses OpenAI for enhanced insights.
+*   **`performAIAnalysis()` method**: A helper method to interact with the OpenAI API and get qualitative insights.
+*   **`generateSignal()` method**: A method to produce a trading signal (BUY, SELL, HOLD) with a confidence score and reasoning.
+*   **Error Handling**: Each `analyze()` method is wrapped in a `try-catch` block to ensure stability, returning a neutral 'HOLD' signal upon failure.
+
+### `backend/agents/technicalAnalysis.js`
+
+*   **Purpose**: This agent focuses on price patterns and technical indicators to predict future market movements.
+*   **Key Functionalities**: It calculates various technical indicators, including RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence), SMA (Simple Moving Average), EMA (Exponential Moving Average), and Bollinger Bands. It also analyzes volume and price action.
+*   **AI Integration**: The agent uses OpenAI to interpret the calculated technical indicators and provide a qualitative analysis of the market's technical posture. This helps in generating a more nuanced trading signal.
+*   **Data Dependencies**: It relies on the `marketData` service to fetch historical and current market data.
+*   **Signal Generation**: The agent generates a signal based on a weighted score of the technical indicators. The final signal and confidence are adjusted based on the insights from the OpenAI analysis.
+
+### `backend/agents/marketSentiment.js`
+
+*   **Purpose**: This agent analyzes the overall market mood and sentiment.
+*   **Key Functionalities**: It assesses market sentiment by analyzing market breadth (advancers vs. decliners), volatility, and momentum. It also integrates with other services like `HistoricalAnalysis` and `MicrostructureAnalysis` to get a more comprehensive view of the market.
+*   **AI Integration**: OpenAI is used to synthesize the various sentiment indicators and provide a holistic view of the market sentiment.
+*   **Data Dependencies**: It uses the `marketData` service for basic market data and also relies on `HistoricalAnalysis`, `PerformanceTracker`, and `MicrostructureAnalysis` for more advanced analysis.
+*   **Signal Generation**: The signal is generated based on a weighted score of sentiment indicators.
+
+### `backend/agents/research.js`
+
+*   **Purpose**: This agent gathers and analyzes external data, including news and economic indicators.
+*   **Key Functionalities**: It uses `axios` to fetch news from various sources (e.g., News API) and economic data. It then analyzes this information to identify potential market-moving events.
+*   **AI Integration**: OpenAI is used to perform sentiment analysis on news articles and to summarize economic data, helping the agent to understand the implications of the external data on the market.
+*   **Data Dependencies**: It uses `axios` for external API calls and has fallback mechanisms for when data sources are unavailable.
+*   **Signal Generation**: The signal is based on the sentiment and potential impact of the analyzed news and economic data.
+
+### `backend/agents/riskManagement.js`
+
+*   **Purpose**: This agent assesses various risk factors to ensure that trading decisions are made with a clear understanding of the potential risks involved.
+*   **Key Functionalities**: It calculates and assesses various risk metrics, including volatility risk, liquidity risk, market risk, and drawdown risk.
+*   **AI Integration**: OpenAI is used to provide a qualitative assessment of the overall risk environment and to suggest risk management strategies.
+*   **Data Dependencies**: It relies on the `marketData` service to fetch the necessary data for its risk calculations.
+*   **Signal Generation**: Instead of a BUY/SELL signal, this agent generates a risk signal (e.g., 'APPROVE_TRADE', 'CAUTIOUS_TRADE', 'AVOID_TRADE') and a risk score that acts as a crucial modifier for the final trading decision made by the `agentOrchestrator`.
+
+
