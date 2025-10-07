@@ -193,7 +193,7 @@ Focus on immediate 15-minute price action with high precision.
             content: prompt
           }
         ],
-        max_tokens: 600,
+        max_tokens: 300,
         temperature: 0.1,
         response_format: { type: "json_object" }
       });
